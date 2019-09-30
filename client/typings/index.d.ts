@@ -1,0 +1,11 @@
+/// <reference path="./navigator.d.ts"/>
+/// <reference path="./json.d.ts"/>
+/// <reference path="./svg.d.ts"/>
+/// <reference path="./png.d.ts"/>
+/// <reference path="./jpg.d.ts"/>
+/// <reference path="./frag.d.ts"/>
+/// <reference path="./otf.d.ts"/>
+/// <reference path="./ttf.d.ts"/>
+/// <reference path="./txt.d.ts"/>
+/// <reference path="./css.d.ts"/>
+/// <reference path="./scss.d.ts"/>

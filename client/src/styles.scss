@@ -1,0 +1,28 @@
+body {
+  font-style: normal;
+  white-space: nowrap;
+}
+.wrapper {
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: black;
+  overflow: auto;
+  height: 100vh;
+  width: 100vw;
+  color: white;
+}
+.inner-wrapper {
+  position: relative;
+  height: 100vh;
+  width: 100vw;
+}
+.panel {
+  position: absolute;
+  background: transparent;
+  display: block;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
