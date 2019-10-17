@@ -1,0 +1,10 @@
+{
+    "linterOptions": {
+        "exclude": [
+            "bin",
+            "build",
+            "config",
+            "node_modules"
+        ]
+    }
+}

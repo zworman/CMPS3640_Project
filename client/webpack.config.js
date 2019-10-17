@@ -94,8 +94,7 @@ const config = {
       {
         from: "src/assets",
         to: "assets"
-      },
-      { from: "src/styles", to: "styles" }
+      }
     ]),
     new HtmlWebpackPlugin({
       title: "CMPS3640-Bomberman",
