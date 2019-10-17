@@ -1,3 +1,5 @@
+##How to Use
+```bash
 # Make sure NPM and Yarn are installed
 # Make sure you have "C:\Users\[Username]\AppData\Roaming\npm" 
 #    added to your path variables
