@@ -72,6 +72,13 @@ const server = (function() {
       }
     });
 
+    socket.on("place-bomb", function() {
+      if (gameStateManager.placeBomb(userid - 1)) {
+        console.log(`Player ${userid} place a bomb`);
+        // Added this delay so the server is not bombarded with requests
+      }
+    });
+
     socket.on("disconnect", function(socket: Socket) {
       unassignUserId(userid);
       console.log(`User disconnected: ${userid}`);

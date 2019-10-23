@@ -10,6 +10,7 @@ import io from "socket.io-client";
 import classes from "./styles.scss";
 import Player from "./player";
 import movementController from "./../movementController";
+import Bomb from "./bomb";
 
 const socket = io.connect("http://localhost:3000");
 const movement = movementController(socket);
@@ -29,6 +30,7 @@ const playerPositions: number[][] = [
   [blockSize * 1, blockSize * (gridSize - 2) - 16],
   [blockSize * (gridSize - 2), blockSize * (gridSize - 2) - 16]
 ];
+const bombs: { x: number; y: number; sprite: Bomb }[] = [];
 
 function PixiApp(props: any): JSX.Element {
   const pixiContainerRef = useRef<HTMLDivElement>(null);
@@ -82,6 +84,24 @@ function PixiApp(props: any): JSX.Element {
           case 1:
             graphic.beginFill(0xffffff);
             break;
+          case 3:
+            let alreadySet = false;
+            for (const b of bombs) {
+              if (b.x == row && b.y == col) {
+                alreadySet = true;
+                break;
+              }
+            }
+            if (!alreadySet) {
+              const sprite = new Bomb(app);
+              sprite.position.set(blockSize * row, blockSize * col);
+              bombs.push({
+                x: row,
+                y: col,
+                sprite: sprite
+              });
+              vp.addChild(sprite);
+            }
           case 0:
           default:
             graphic.beginFill(0x000000);
@@ -136,6 +156,7 @@ function PixiApp(props: any): JSX.Element {
           .add(paths[1])
           .add(paths[2])
           .add(paths[3])
+          .add("bomb", "src/assets/sprites/bomb.json")
           .load((loader, res) => {
             for (var i = 0; i < paths.length; ++i) {
               const player = res[paths[i]];

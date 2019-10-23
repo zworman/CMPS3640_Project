@@ -16,12 +16,33 @@ const gameboard: number[][] = [
   [2, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 2],
   [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2]
 ];
+const bombTime = 1000; // In miliseconds
+const bombSize = 4; // In grid units
 
 const playerPositions: number[][] = [
   [1, 1],
   [gameboard[0].length - 2, 1],
   [1, gameboard.length - 2],
   [gameboard[gameboard.length - 1].length - 2, gameboard.length - 2]
+];
+
+const playerOptions: { bombCount: number; maxBombCount: number }[] = [
+  {
+    bombCount: 0,
+    maxBombCount: 1
+  },
+  {
+    bombCount: 0,
+    maxBombCount: 1
+  },
+  {
+    bombCount: 0,
+    maxBombCount: 1
+  },
+  {
+    bombCount: 0,
+    maxBombCount: 1
+  }
 ];
 
 export type Direction = "up" | "down" | "left" | "right";
@@ -62,10 +83,53 @@ const gameStateManager = (function() {
     return false;
   }
 
+  function placeBomb(playerNumber: number): boolean {
+    if (
+      playerOptions[playerNumber].bombCount <
+      playerOptions[playerNumber].maxBombCount
+    ) {
+      ++playerOptions[playerNumber].bombCount;
+      let x = playerPositions[playerNumber][0];
+      let y = playerPositions[playerNumber][1];
+      gameboard[x][y] = 3;
+      setTimeout(() => {
+        --playerOptions[playerNumber].bombCount;
+        const spaceCount = bombSize / 2;
+        let dirs = [1, -1];
+        // Check vertical directions
+        for (let dir = 0; dir < dirs.length; ++dir) {
+          for (let i = 0; i < spaceCount; ++i) {
+            if (gameboard[x + i * dirs[dir]][y] === 1) {
+              gameboard[x + i * dirs[dir]][y] = 0;
+              break;
+            } else if (gameboard[x + i * dirs[dir]][y] === 2) {
+              break;
+            }
+          }
+        }
+        // Check horizontal directions
+        for (let dir = 0; dir < dirs.length; ++dir) {
+          for (let i = 0; i < spaceCount; ++i) {
+            if (gameboard[x][y + i * dirs[dir]] === 1) {
+              gameboard[x][y + i * dirs[dir]] = 0;
+              break;
+            } else if (gameboard[x][y + i * dirs[dir]] === 2) {
+              break;
+            }
+          }
+        }
+        gameboard[x][y] = 0;
+      }, bombTime);
+      return true;
+    }
+    return false;
+  }
+
   return {
     getGameBoard: () => gameboard,
     getPlayerPositions: () => playerPositions,
     movePlayer: movePlayer,
+    placeBomb: placeBomb,
     logGameBoard: logGameBoard
   };
 })();
