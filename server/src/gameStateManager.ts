@@ -89,8 +89,8 @@ const gameStateManager = (function() {
       playerOptions[playerNumber].maxBombCount
     ) {
       ++playerOptions[playerNumber].bombCount;
-      let x = playerPositions[playerNumber][0];
-      let y = playerPositions[playerNumber][1];
+      const x = playerPositions[playerNumber][0];
+      const y = playerPositions[playerNumber][1];
       gameboard[x][y] = 3;
       setTimeout(() => {
         --playerOptions[playerNumber].bombCount;

@@ -30,7 +30,6 @@ const playerPositions: number[][] = [
   [blockSize * 1, blockSize * (gridSize - 2) - 16],
   [blockSize * (gridSize - 2), blockSize * (gridSize - 2) - 16]
 ];
-const bombs: { x: number; y: number; sprite: Bomb }[] = [];
 
 function PixiApp(props: any): JSX.Element {
   const pixiContainerRef = useRef<HTMLDivElement>(null);
@@ -85,23 +84,9 @@ function PixiApp(props: any): JSX.Element {
             graphic.beginFill(0xffffff);
             break;
           case 3:
-            let alreadySet = false;
-            for (const b of bombs) {
-              if (b.x == row && b.y == col) {
-                alreadySet = true;
-                break;
-              }
-            }
-            if (!alreadySet) {
-              const sprite = new Bomb(app);
-              sprite.position.set(blockSize * row, blockSize * col);
-              bombs.push({
-                x: row,
-                y: col,
-                sprite: sprite
-              });
-              vp.addChild(sprite);
-            }
+            const sprite = new Bomb(app);
+            sprite.position.set(blockSize * row, blockSize * col);
+            vp.addChild(sprite);
           case 0:
           default:
             graphic.beginFill(0x000000);
