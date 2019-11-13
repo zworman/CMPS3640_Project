@@ -103,13 +103,22 @@ function PixiApp(props: any): JSX.Element {
     graphic.endFill();
   }
 
-  function updatePlayerPositions(playerPositions: number[][]) {
+  function updatePlayerPositions(newPlayerPositions: number[][]) {
     let i = 0;
     for (const p of players) {
-      p.position.set(
-        blockSize * playerPositions[i][0],
-        blockSize * playerPositions[i][1] - 16
-      );
+      function move(t) : void {
+	if(t <= 0) {
+      		p.position.set(newPlayePositions[i][0], newPlayerPositions[i][1]);
+	}
+	else {
+	    setTimeout(()=>{
+		p.position.set(playerPositions[i][0] + (playerPositions[i][0]-newPlayerPositions[i][0])*t,
+		(playerPositions[i][1] + (playerPositions[i][1]-newPlayerPositions[i][1])*t));
+	    move(t-0.1);},50);
+	     
+	}
+      }
+      move(1);
       ++i;
     }
   }
