@@ -10,10 +10,6 @@ export default function App(): JSX.Element {
     <div className={classes["wrapper"]}>
       <div className={classes["inner-wrapper"]}>
         <PixiApp />
-        {/* <img
-          className={classes["background"]}
-          src="assets/images/bomberman-screenshot.png"
-        /> */}
       </div>
     </div>
   );

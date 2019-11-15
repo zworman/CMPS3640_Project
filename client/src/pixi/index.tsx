@@ -19,6 +19,8 @@ socket.on("userid", function(message: any) {
   console.log(message);
 });
 
+type Position = { x: number; y: number };
+
 const graphic = new PIXI.Graphics();
 graphic.zIndex = -1;
 const blockSize = 128;
@@ -104,21 +106,46 @@ function PixiApp(props: any): JSX.Element {
   }
 
   function updatePlayerPositions(newPlayerPositions: number[][]) {
+    function move(
+      player: Player,
+      pos: Position,
+      nPos: Position,
+      t: number
+    ): void {
+      if (t >= 1) {
+        player.position.set(nPos.x, nPos.y);
+      } else {
+        setTimeout(() => {
+          player.position.set(
+            pos.x - (pos.x - nPos.x) * t,
+            pos.y - (pos.y - nPos.y) * t
+          );
+          move(player, pos, nPos, t + 0.1);
+        }, 10);
+      }
+    }
     let i = 0;
     for (const p of players) {
-      function move(t) : void {
-	if(t <= 0) {
-      		p.position.set(newPlayePositions[i][0], newPlayerPositions[i][1]);
-	}
-	else {
-	    setTimeout(()=>{
-		p.position.set(playerPositions[i][0] + (playerPositions[i][0]-newPlayerPositions[i][0])*t,
-		(playerPositions[i][1] + (playerPositions[i][1]-newPlayerPositions[i][1])*t));
-	    move(t-0.1);},50);
-	     
-	}
+      const x = playerPositions[i][0];
+      const y = playerPositions[i][1];
+      const nx = newPlayerPositions[i][0] * blockSize;
+      const ny = newPlayerPositions[i][1] * blockSize - 16;
+      if (x !== nx || y !== ny) {
+        // You need to set this so it doesn't update every single frame.
+        playerPositions[i][0] = nx;
+        playerPositions[i][1] = ny;
+        // You need to pass the old positions works.
+        // Getting the exact position from the sprite makes it smoother
+        // Because they may have already been moving
+        // To make this even smoother you would need to do two things
+        // First you need to update how quickly the server allows the player to move
+        // This should be the same about of time we use for the movment of one unit on the client side
+        // Second you need to change t based on how far the point is from the actual sprite position
+        // For example you may have the sprite at 1, 1 but the server updates with 1, 3. Thus the time needs to be based off
+        // the difference of two rather than one. Then to properly get the rubberbanding effect you would have a threshold
+        // For example, if the difference in positions is greater than 2 then just snap using a minimum time.
+        move(p, { x: p.position.x, y: p.position.y }, { x: nx, y: ny }, 0);
       }
-      move(1);
       ++i;
     }
   }
