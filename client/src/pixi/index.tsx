@@ -85,6 +85,9 @@ function PixiApp(props: any): JSX.Element {
           case 1:
             graphic.beginFill(0xffffff);
             break;
+          case 4:
+              graphic.beginFill(0xff0000);
+              break;
           case 3:
             const sprite = new Bomb(app);
             sprite.position.set(blockSize * row, blockSize * col);
