@@ -26,22 +26,26 @@ const playerPositions: number[][] = [
   [gameboard[gameboard.length - 1].length - 2, gameboard.length - 2]
 ];
 
-const playerOptions: { bombCount: number; maxBombCount: number }[] = [
+const playerOptions: { bombCount: number; maxBombCount: number; health: number }[] = [
   {
     bombCount: 0,
-    maxBombCount: 1
+    maxBombCount: 1,
+    health: 1
   },
   {
     bombCount: 0,
-    maxBombCount: 1
+    maxBombCount: 1,
+    health: 1
   },
   {
     bombCount: 0,
-    maxBombCount: 1
+    maxBombCount: 1,
+    health: 1
   },
   {
     bombCount: 0,
-    maxBombCount: 1
+    maxBombCount: 1,
+    health: 1
   }
 ];
 
@@ -49,12 +53,12 @@ export type Direction = "up" | "down" | "left" | "right";
 
 const gameStateManager = (function() {
   function logGameBoard() {
-  for (let rows = 0; rows < 15; ++rows) {
-    for (let cols = 0; cols < 15; ++cols) {
-      console.log(`${gameboard[rows][cols]} `);
+    for (let rows = 0; rows < 15; ++rows) {
+      for (let cols = 0; cols < 15; ++cols) {
+        console.log(`${gameboard[rows][cols]} `);
+      }
+      console.log("\n");
     }
-    console.log("\n");
-  }
   }
 
   function movePlayer(playerNumber: number, dir: Direction): boolean {
@@ -76,7 +80,7 @@ const gameStateManager = (function() {
       default:
         break;
     }
-    if (gameboard[x][y] === 0) {
+    if (gameboard[x][y] !== 1 && gameboard[x][y] !== 2) {
       playerPositions[playerNumber] = [x, y];
       return true;
     }
@@ -93,11 +97,11 @@ const gameStateManager = (function() {
       const y = playerPositions[playerNumber][1];
       gameboard[x][y] = 3;
       setTimeout(() => {
-        --playerOptions[playerNumber].bombCount;
         const spaceCount = bombSize / 2;
         let dirs = [1, -1];
         // Turns Blocks Red
         setTimeout(() => {
+          --playerOptions[playerNumber].bombCount;
           // Check vertical directions
           for (let dir = 0; dir < dirs.length; ++dir) {
             for (let i = 0; i < spaceCount; ++i) {
@@ -118,6 +122,8 @@ const gameStateManager = (function() {
               }
             }
           }
+          // Check for deaths
+          checkDeath();
         }, bombTime - 300);
         // Turns Blocks Black
         setTimeout(() => {
@@ -147,6 +153,24 @@ const gameStateManager = (function() {
       return true;
     }
     return false;
+  }
+
+  function checkDeath() {
+    for (let i = 0; i < playerPositions.length; i++) {
+      let x = playerPositions[i][0];
+      let y = playerPositions[i][1];
+      if (gameboard[x][y] === 4) {
+        let id = i + 1;
+        playerOptions[i].health--;
+        console.log("Player " + id + " got hit");
+      }
+    }
+    for (let i = 0; i < playerPositions.length; i++) {
+      if (playerOptions[i].health <= 0) {
+        let id = i + 1;
+        console.log("Player " + id + " died");        
+      }
+    }
   }
 
   return {
