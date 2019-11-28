@@ -93,33 +93,35 @@ const gameStateManager = (function() {
       const y = playerPositions[playerNumber][1];
       gameboard[x][y] = 3;
       setTimeout(() => {
-        --playerOptions[playerNumber].bombCount;
-        const spaceCount = bombSize / 2;
-        let dirs = [1, -1];
-        // Check vertical directions
-        for (let dir = 0; dir < dirs.length; ++dir) {
-          for (let i = 0; i < spaceCount; ++i) {
-            if (gameboard[x + i * dirs[dir]][y] === 1) {
-              gameboard[x + i * dirs[dir]][y] = 0;
-              break;
-            } else if (gameboard[x + i * dirs[dir]][y] === 2) {
-              break;
+        setTimeout(() => {
+            --playerOptions[playerNumber].bombCount;
+            const spaceCount = bombSize / 2;
+            let dirs = [1, -1];
+            // Check vertical directions
+            for (let dir = 0; dir < dirs.length; ++dir) {
+            for (let i = 0; i < spaceCount; ++i) {
+                if (gameboard[x + i * dirs[dir]][y] === 1) {
+                gameboard[x + i * dirs[dir]][y] = 0;
+                break;
+                } else if (gameboard[x + i * dirs[dir]][y] === 2) {
+                break;
+                }
             }
-          }
-        }
-        // Check horizontal directions
-        for (let dir = 0; dir < dirs.length; ++dir) {
-          for (let i = 0; i < spaceCount; ++i) {
-            if (gameboard[x][y + i * dirs[dir]] === 1) {
-              gameboard[x][y + i * dirs[dir]] = 0;
-              break;
-            } else if (gameboard[x][y + i * dirs[dir]] === 2) {
-              break;
             }
-          }
-        }
+            // Check horizontal directions
+            for (let dir = 0; dir < dirs.length; ++dir) {
+            for (let i = 0; i < spaceCount; ++i) {
+                if (gameboard[x][y + i * dirs[dir]] === 1) {
+                gameboard[x][y + i * dirs[dir]] = 0;
+                break;
+                } else if (gameboard[x][y + i * dirs[dir]] === 2) {
+                break;
+                }
+            }
+            }
+        }, bombTime - 50);
         gameboard[x][y] = 0;
-      }, bombTime);
+      }, 50);
       return true;
     }
     return false;
