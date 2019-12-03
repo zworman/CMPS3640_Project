@@ -165,17 +165,20 @@ const gameStateManager = (function() {
         console.log("Player " + id + " got hit");
       }
     }
-    for (let i = 0; i < playerPositions.length; i++) {
-      if (playerOptions[i].health <= 0) {
-        let id = i + 1;
-        console.log("Player " + id + " died");        
-      }
+  }
+
+  function isDed(playerid: number) : boolean {
+    if (playerOptions[playerid].health <= 0) {
+      console.log("Player " + playerid + " died");  
+      return true;      
     }
+    return false;
   }
 
   return {
     getGameBoard: () => gameboard,
     getPlayerPositions: () => playerPositions,
+    isDed: isDed,
     movePlayer: movePlayer,
     placeBomb: placeBomb,
     logGameBoard: logGameBoard

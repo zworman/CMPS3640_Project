@@ -46,6 +46,7 @@ const server = (function() {
   // a websocket, log that a user has connected
   io.sockets.on("connection", function(socket: Socket) {
     let allowMovement = true;
+    let ded = false;
     const userid = assignUserId(socket);
     console.log(`User connected: ${userid}`);
     socket.send("userid", `Assigned userId: ${userid}`);
@@ -58,7 +59,8 @@ const server = (function() {
     }, 50);
 
     socket.on("move", function(dir: Direction) {
-      if (allowMovement) {
+      ded = gameStateManager.isDed(userid-1);
+      if (allowMovement && !ded) {
         allowMovement = false;
         if (gameStateManager.movePlayer(userid - 1, dir)) {
           console.log(`Player ${userid} moved ${dir}`);
