@@ -169,7 +169,8 @@ const gameStateManager = (function() {
 
   function isDed(playerid: number) : boolean {
     if (playerOptions[playerid].health <= 0) {
-      console.log("Player " + playerid + " died");  
+      let id : number = playerid + 1;
+      console.log("Player " + id + " died");  
       return true;      
     }
     return false;
