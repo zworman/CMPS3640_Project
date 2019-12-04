@@ -60,8 +60,7 @@ const server = (function() {
     }, 50);
 
     socket.on("move", function(dir: Direction) {
-      if (allowMovement && !ded) {
-        ded = gameStateManager.isDed(userid-1);
+      if (allowMovement && !gameStateManager.isDed(userid - 1)) {
         allowMovement = false;
         if (gameStateManager.movePlayer(userid - 1, dir)) {
           console.log(`Player ${userid} moved ${dir}`);
@@ -76,7 +75,10 @@ const server = (function() {
     });
 
     socket.on("place-bomb", function() {
-      if (gameStateManager.placeBomb(userid - 1)) {
+      if (
+        !gameStateManager.isDed(userid - 1) &&
+        gameStateManager.placeBomb(userid - 1)
+      ) {
         console.log(`Player ${userid} place a bomb`);
         // Added this delay so the server is not bombarded with requests
       }

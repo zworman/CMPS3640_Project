@@ -1,11 +1,11 @@
 const gameRunning = false;
 const maxUsers = 4;
 const gameboard: number[][] = [
-  [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],    // 0 -> Open Block
-  [2, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 2],    // 1 -> Breakable Block
-  [2, 0, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 0, 2],    // 2 -> Unbreakable Block
-  [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],    // 3 -> Bomb
-  [2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2],    // 4 -> Flame
+  [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2], // 0 -> Open Block
+  [2, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 2], // 1 -> Breakable Block
+  [2, 0, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 0, 2], // 2 -> Unbreakable Block
+  [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2], // 3 -> Bomb
+  [2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2], // 4 -> Flame
   [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
   [2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2, 1, 2],
   [2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2],
@@ -27,7 +27,11 @@ const playerPositions: number[][] = [
   [gameboard[gameboard.length - 1].length - 2, gameboard.length - 2]
 ];
 
-const playerOptions: { bombCount: number; maxBombCount: number; health: number }[] = [
+const playerOptions: {
+  bombCount: number;
+  maxBombCount: number;
+  health: number;
+}[] = [
   {
     bombCount: 0,
     maxBombCount: 1,
@@ -53,7 +57,6 @@ const playerOptions: { bombCount: number; maxBombCount: number; health: number }
 export type Direction = "up" | "down" | "left" | "right";
 
 const gameStateManager = (function() {
-
   function logGameBoard() {
     for (let rows = 0; rows < 15; ++rows) {
       for (let cols = 0; cols < 15; ++cols) {
@@ -165,21 +168,20 @@ const gameStateManager = (function() {
       if (gameboard[x][y] === 4) {
         let id = i + 1;
         playerOptions[i].health--;
-        console.log("Player " + id + " got hit");
+        console.log("Player " + id + " died");  
       }
     }
   }
 
-  function isDed(playerid: number) : boolean {
-    if (playerid > 0 && playerOptions[playerid].health <= 0) {
-      let id : number = playerid + 1;
-      console.log("Player " + id + " died");  
-      return true;      
+  function isDed(playerid: number): boolean {
+    if (playerid >= 0 && playerOptions[playerid].health <= 0) {
+      let id: number = playerid + 1;
+      return true;
     }
     return false;
   }
 
-	return {
+  return {
     getPlayerOptions: () => playerOptions,
     getGameBoard: () => gameboard,
     getPlayerPositions: () => playerPositions,
