@@ -3,10 +3,12 @@ type SpritePack = { [dir in Direction]: PIXI.AnimatedSprite };
 
 class Player extends PIXI.Container {
   sprites: SpritePack;
+  isDed: boolean;
 
   constructor(sprites: SpritePack) {
     super();
     this.sprites = sprites;
+    this.isDed = false;
     this.addChild(this.sprites["down"]);
   }
   removeSprites() {
@@ -15,8 +17,10 @@ class Player extends PIXI.Container {
     }
   }
   set(direction: Direction) {
-    this.removeSprites();
-    this.addChild(this.sprites[direction]);
+    if(!this.isDed) {
+      this.removeSprites();
+      this.addChild(this.sprites[direction]);
+    }
   }
   playAnimation(direction: Direction) {
     this.removeSprites();
@@ -27,6 +31,12 @@ class Player extends PIXI.Container {
   pauseAnimation() {
     for (var s in this.sprites) {
       this.sprites[s as Direction].stop();
+    }
+  }
+  kill() {
+    if(!this.isDed) {
+      this.removeSprites();
+      this.isDed = true;
     }
   }
 }

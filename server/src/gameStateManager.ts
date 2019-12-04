@@ -52,6 +52,7 @@ const playerOptions: { bombCount: number; maxBombCount: number; health: number }
 export type Direction = "up" | "down" | "left" | "right";
 
 const gameStateManager = (function() {
+
   function logGameBoard() {
     for (let rows = 0; rows < 15; ++rows) {
       for (let cols = 0; cols < 15; ++cols) {
@@ -176,7 +177,8 @@ const gameStateManager = (function() {
     return false;
   }
 
-  return {
+	return {
+    getPlayerOptions: () => playerOptions,
     getGameBoard: () => gameboard,
     getPlayerPositions: () => playerPositions,
     isDed: isDed,

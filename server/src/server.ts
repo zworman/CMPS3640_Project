@@ -52,6 +52,7 @@ const server = (function() {
     socket.send("userid", `Assigned userId: ${userid}`);
     setInterval(function() {
       let gamestate = {
+        playerOptions: gameStateManager.getPlayerOptions(),
         gameboard: gameStateManager.getGameBoard(),
         playerPositions: gameStateManager.getPlayerPositions()
       };
@@ -59,8 +60,8 @@ const server = (function() {
     }, 50);
 
     socket.on("move", function(dir: Direction) {
-      ded = gameStateManager.isDed(userid-1);
       if (allowMovement && !ded) {
+        ded = gameStateManager.isDed(userid-1);
         allowMovement = false;
         if (gameStateManager.movePlayer(userid - 1, dir)) {
           console.log(`Player ${userid} moved ${dir}`);

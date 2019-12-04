@@ -68,6 +68,7 @@ function PixiApp(props: any): JSX.Element {
     socket.on("updateGamestate", function(msg: any) {
       // console.log(msg);
       msg = JSON.parse(msg);
+      checkDed(msg.playerOptions)
       updateGameboard(msg.gameboard);
       updatePlayerPositions(msg.playerPositions);
     });
@@ -106,6 +107,16 @@ function PixiApp(props: any): JSX.Element {
       }
     }
     graphic.endFill();
+  }
+  
+  function checkDed(options: any) {
+    let i = 0;
+    for (const p of players) {
+	    if(options[i].health <= 0) {
+		p.kill();
+	    }
+	    ++i;
+    }
   }
 
   function updatePlayerPositions(newPlayerPositions: number[][]) {
