@@ -1,4 +1,5 @@
 const gameRunning = false;
+const maxUsers = 4;
 const gameboard: number[][] = [
   [2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2, 2],    // 0 -> Open Block
   [2, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 2],    // 1 -> Breakable Block
@@ -63,6 +64,7 @@ const gameStateManager = (function() {
   }
 
   function movePlayer(playerNumber: number, dir: Direction): boolean {
+    if (playerNumber < 0) return;
     let x = playerPositions[playerNumber][0];
     let y = playerPositions[playerNumber][1];
     switch (dir) {
@@ -157,7 +159,7 @@ const gameStateManager = (function() {
   }
 
   function checkDeath() {
-    for (let i = 0; i < playerPositions.length; i++) {
+    for (let i = 0; i < maxUsers; i++) {
       let x = playerPositions[i][0];
       let y = playerPositions[i][1];
       if (gameboard[x][y] === 4) {
@@ -169,7 +171,7 @@ const gameStateManager = (function() {
   }
 
   function isDed(playerid: number) : boolean {
-    if (playerOptions[playerid].health <= 0) {
+    if (playerid > 0 && playerOptions[playerid].health <= 0) {
       let id : number = playerid + 1;
       console.log("Player " + id + " died");  
       return true;      
