@@ -10,6 +10,9 @@ class Player extends PIXI.Container {
     this.sprites = sprites;
     this.isDed = false;
     this.addChild(this.sprites["down"]);
+    for (var s in this.sprites) {
+      this.sprites[s as Direction].animationSpeed = 0.1;
+    }
   }
   removeSprites() {
     for (var s in this.sprites) {
@@ -17,24 +20,28 @@ class Player extends PIXI.Container {
     }
   }
   set(direction: Direction) {
-    if(!this.isDed) {
+    if (!this.isDed) {
       this.removeSprites();
       this.addChild(this.sprites[direction]);
     }
   }
   playAnimation(direction: Direction) {
-    this.removeSprites();
-    this.addChild(this.sprites[direction]);
-    this.sprites[direction].animationSpeed = 0.1;
-    this.sprites[direction].play();
+    if (!this.isDed) {
+      this.removeSprites();
+      this.addChild(this.sprites[direction]);
+      this.sprites[direction].animationSpeed = 0.1;
+      this.sprites[direction].play();
+    }
   }
   pauseAnimation() {
-    for (var s in this.sprites) {
-      this.sprites[s as Direction].stop();
+    if (!this.isDed) {
+      for (var s in this.sprites) {
+        this.sprites[s as Direction].stop();
+      }
     }
   }
   kill() {
-    if(!this.isDed) {
+    if (!this.isDed) {
       this.removeSprites();
       this.isDed = true;
     }

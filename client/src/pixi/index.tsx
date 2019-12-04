@@ -68,7 +68,7 @@ function PixiApp(props: any): JSX.Element {
     socket.on("updateGamestate", function(msg: any) {
       // console.log(msg);
       msg = JSON.parse(msg);
-      checkDed(msg.playerOptions)
+      checkDed(msg.playerOptions);
       updateGameboard(msg.gameboard);
       updatePlayerPositions(msg.playerPositions);
     });
@@ -87,8 +87,8 @@ function PixiApp(props: any): JSX.Element {
             graphic.beginFill(0xffffff);
             break;
           case 4:
-              graphic.beginFill(0xff0000);
-              break;
+            graphic.beginFill(0xff0000);
+            break;
           case 3:
             const sprite = new Bomb(app);
             sprite.position.set(blockSize * row, blockSize * col);
@@ -108,14 +108,14 @@ function PixiApp(props: any): JSX.Element {
     }
     graphic.endFill();
   }
-  
+
   function checkDed(options: any) {
     let i = 0;
     for (const p of players) {
-	    if(options[i].health <= 0) {
-		p.kill();
-	    }
-	    ++i;
+      if (options[i].health <= 0) {
+        p.kill();
+      }
+      ++i;
     }
   }
 
@@ -126,8 +126,18 @@ function PixiApp(props: any): JSX.Element {
       nPos: Position,
       t: number
     ): void {
+      if (pos.x - nPos.x > 0) {
+        player.playAnimation("left");
+      } else if (pos.x - nPos.x < 0) {
+        player.playAnimation("right");
+      } else if (pos.y - nPos.y > 0) {
+        player.playAnimation("up");
+      } else if (pos.y - nPos.y < 0) {
+        player.playAnimation("down");
+      }
       if (t >= 1) {
         player.position.set(nPos.x, nPos.y);
+        player.pauseAnimation();
       } else {
         setTimeout(() => {
           player.position.set(
