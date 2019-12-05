@@ -14,12 +14,14 @@
   "dependencies": {
     "@types/chai-http": "^3.0.5",
     "@types/express": "^4.17.1",
+    "@types/node": "^12.12.14",
     "@types/socket.io": "^2.1.4",
     "chai-http": "^4.3.0",
     "concurrently": "^3.6.1",
+    "core-util-is": "^1.0.2",
     "express": "^4.17.1",
-    "npm": "^6.12.0",
-    "typescript": "^3.6.4"
+    "npm": "^6.13.2",
+    "typescript": "^3.7.3"
   },
   "devDependencies": {
     "@types/chai": "^4.2.3",

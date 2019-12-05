@@ -21,6 +21,9 @@ export default function movementController(socket: SocketIOClient.Socket) {
   function placeBomb() {
     socket.emit("place-bomb");
   }
+  function removePower() {
+    socket.emit("remove-power");
+  }
   return {
     moveDirection: moveDirection
   };

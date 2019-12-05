@@ -3,6 +3,7 @@ import PixiApp from "./pixi";
 
 // Styles
 import classes from "./styles.scss";
+import e from "express";
 
 export default function App(): JSX.Element {
   useEffect(() => {}, []);

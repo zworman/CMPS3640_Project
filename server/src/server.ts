@@ -54,7 +54,8 @@ const server = (function() {
       let gamestate = {
         playerOptions: gameStateManager.getPlayerOptions(),
         gameboard: gameStateManager.getGameBoard(),
-        playerPositions: gameStateManager.getPlayerPositions()
+        playerPositions: gameStateManager.getPlayerPositions(),
+        powerupPositions: gameStateManager.getPowerupPositions()
       };
       socket.emit("updateGamestate", JSON.stringify(gamestate));
     }, 50);
@@ -81,6 +82,12 @@ const server = (function() {
       ) {
         console.log(`Player ${userid} place a bomb`);
         // Added this delay so the server is not bombarded with requests
+      }
+    });
+
+    socket.on("remove-power", function() {
+      if (gameStateManager.isGrabbed(userid-1)) {
+        console.log('Man im tired');
       }
     });
 

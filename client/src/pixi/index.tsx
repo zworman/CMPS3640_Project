@@ -11,20 +11,24 @@ import classes from "./styles.scss";
 import Player from "./player";
 import movementController from "./../movementController";
 import Bomb from "./bomb";
+import Powerup from "./powerup";
 
 const socket = io.connect("http://localhost:3000");
 const movement = movementController(socket);
 
-socket.on("userid", function(message: any) {
+socket.on("userid", function (message: any) {
   console.log(message);
 });
 
 type Position = { x: number; y: number };
 
+const powerups: (Powerup | null)[][] = [];
+
 const graphic = new PIXI.Graphics();
 graphic.zIndex = -1;
 const blockSize = 128;
 const gridSize = 15;
+for (var i = 0; i < gridSize; ++i) powerups[i] = [];
 const players: Player[] = [];
 const playerPositions: number[][] = [
   [blockSize * 1, blockSize * 1 - 16],
@@ -65,14 +69,28 @@ function PixiApp(props: any): JSX.Element {
   }, [app]);
 
   useEffect(() => {
-    socket.on("updateGamestate", function(msg: any) {
+    socket.on("updateGamestate", function (msg: any) {
       // console.log(msg);
       msg = JSON.parse(msg);
       checkDed(msg.playerOptions);
       updateGameboard(msg.gameboard);
       updatePlayerPositions(msg.playerPositions);
+      updatePowerupPositions(msg.powerupPositions, msg.playerPositions);
     });
   }, []);
+
+  function updatePowerupPositions(powerupPositions: number[][], playerPositions: number[][]) {
+    for (var row = 0; row < powerupPositions.length; row++) {
+      for (var col = 0; col < powerupPositions[row].length; col++) {
+        if (powerupPositions[row][col] === 0) {
+          const pu = powerups[row][col];
+          if (pu) pu.removePower();
+          powerups[row][col] = null;
+        }
+      }
+    }
+
+  }
 
   function updateGameboard(gameboard: number[][]) {
     graphic.clear();
@@ -90,9 +108,19 @@ function PixiApp(props: any): JSX.Element {
             graphic.beginFill(0xff0000);
             break;
           case 3:
-            const sprite = new Bomb(app);
-            sprite.position.set(blockSize * row, blockSize * col);
-            vp.addChild(sprite);
+            const sprite1 = new Bomb(app);
+            sprite1.position.set(blockSize * row, blockSize * col);
+            vp.addChild(sprite1);
+            graphic.beginFill(0x000000);
+            break;
+          case 5:
+            if (!powerups[row][col]) {
+              powerups[row][col] = new Powerup(app);
+              powerups[row][col].position.set(blockSize * row, blockSize * col);
+              vp.addChild(powerups[row][col]);
+              graphic.beginFill(0x000000);
+            }
+            break;
           case 0:
           default:
             graphic.beginFill(0x000000);
@@ -202,6 +230,7 @@ function PixiApp(props: any): JSX.Element {
           .add(paths[2])
           .add(paths[3])
           .add("bomb", "src/assets/sprites/bomb.json")
+          .add("powerup", "src/assets/sprites/powerup.json")
           .load((loader, res) => {
             for (var i = 0; i < paths.length; ++i) {
               const player = res[paths[i]];
